@@ -1,0 +1,4 @@
+flask==2.2.2
+Pillow==9.4.0
+ultralytics==8.0.182
+flask_cors

@@ -1,0 +1,18 @@
+# YOLOv8 Configuration File
+
+# Model parameters
+model:
+  name: YOLOv8
+  type: yolov8
+  architecture:
+    # Define the architecture details here
+
+# Dataset parameters
+train: C:/Users/Lenovo/Desktop/Dewedar_project/train
+val: C:/Users/Lenovo/Desktop/Dewedar_project/val
+nc: 1  # Number of classes
+names: ['Mohammed Dewedar']  # Class names
+
+# Training parameters
+batch_size: 4
+epochs: 100
