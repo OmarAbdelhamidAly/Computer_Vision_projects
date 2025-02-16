@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Detection</title>
+</head>
+<body>
+    <h1>Object Detection</h1>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="capture">Capture</button>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <br>
+    <label for="user_id">Enter User ID:</label>
+    <input type="text" id="user_id" name="user_id">
+    <button id="detect">Detect Objects</button>
+    <p id="result"></p>
+
+    <script>
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                var video = document.getElementById('video');
+                video.srcObject = stream;
+            })
+            .catch(function (err) {
+                console.log("An error occurred: " + err);
+            });
+
+        document.getElementById('capture').addEventListener('click', function () {
+            var video = document.getElementById('video');
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        });
+
+        document.getElementById('detect').addEventListener('click', function () {
+            var canvas = document.getElementById('canvas');
+            var imageData = canvas.toDataURL('image/jpeg');
+            var userId = document.getElementById('user_id').value;
+
+            fetch('/detect', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: userId,
+                    image_data: imageData,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    document.getElementById('result').innerText = "Hi " + data.result;
+                } else {
+                    document.getElementById('result').innerText = "Please try again.";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "An error occurred. Please try again.";
+            });
+        });
+    </script>
+</body>
+</html>
